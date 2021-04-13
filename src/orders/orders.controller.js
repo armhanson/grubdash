@@ -35,19 +35,18 @@ function orderValidation(req, res, next) {
   } else if (dishes.length <= 0 || !Array.isArray(dishes)) {
     notif = "Order must include at least one dish";
   } else {
-    for (let dish of dishes) {
+    for (let idx = 0; idx < dishes.length; idx++) {
       if (
-        !dish.quantity ||
-        dish.quantity <= 0 ||
-        !Number.isInteger(dish.quantity)
-      ) {
-        notif = `Dish ${dish} must have a quantity that is an integer greater than 0`;
-      }
+        !dishes[idx].quantity ||
+        dishes[idx].quantity <= 0 ||
+        !Number.isInteger(dishes[idx].quantity)
+      )
+        notif = `Dish ${idx} must have a quantity that is an integer greater than 0`;
     }
   }
   if (notif) {
     return next({
-      status: 404,
+      status: 400,
       message: notif,
     });
   }
@@ -110,8 +109,8 @@ function orderStatusValidation(req, res, next) {
 
   if (notif) {
     return next({
-      status: 404,
-      message: message,
+      status: 400,
+      message: notif,
     });
   }
   next();

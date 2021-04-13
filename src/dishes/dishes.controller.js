@@ -36,25 +36,29 @@ function dishBodyExists(req, res, next) {
   } else if (price <= 0 || !Number.isInteger(price)) {
     notif = "Dish must have a price that is an integer greater than 0";
   } else if (!image_url || image_url === "") {
-    notif = "Dish must include an image";
+    notif = "Dish must include an image_url";
   }
   if (notif) {
-    next({ status: 400, message: notif });
+    return next({
+      status: 400,
+      message: notif,
+    });
   }
+  next();
 }
 
-function dishExists(req, res, next) {
-  const { dishId } = req.params;
-  const foundDish = dishes.find((dish) => dish.id === dishId);
-  if (foundDish) {
-    res.locals.dish = foundDish;
-    return next();
-  }
-  next({
-    status: 404,
-    message: `${dishId}`,
-  });
-}
+// function dishExists(req, res, next) {
+//   const { dishId } = req.params;
+//   const foundDish = dishes.find((dish) => dish.id === dishId);
+//   if (foundDish) {
+//     res.locals.dish = foundDish;
+//     return next();
+//   }
+//   next({
+//     status: 404,
+//     message: `${dishId}`,
+//   });
+// }
 
 function read(req, res) {
   res.json({ data: res.locals.dish });
